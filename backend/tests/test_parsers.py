@@ -15,6 +15,11 @@ from docx import Document
 
 from app.resume.resume_parser import parse_resume
 
+from app.jd.section_detector import (
+    detect_section as detect_jd_section,
+    split_into_sections as split_jd_sections,
+)
+
 FIXTURES_DIR = Path(__file__).parent / "fixtures"
 
 
@@ -184,3 +189,60 @@ def test_detect_additional_german_sections():
     assert detect_section("Praktische Erfahrung") == "experience"
     assert detect_section("Fähigkeiten") == "skills"
     assert detect_section("Erfolge") == "achievements"
+
+
+def test_detect_jd_sections():
+    assert detect_jd_section("Responsibilities") == "responsibilities"
+    assert detect_jd_section("Requirements") == "requirements"
+    assert detect_jd_section("Education") == "education"
+    assert detect_jd_section("Experience") == "experience"
+    assert detect_jd_section("Technical Skills") == "skills"
+
+
+def test_detect_german_jd_sections():
+    assert detect_jd_section("Aufgaben") == "responsibilities"
+    assert detect_jd_section("Anforderungen") == "requirements"
+    assert detect_jd_section("Ausbildung") == "education"
+    assert detect_jd_section("Berufserfahrung") == "experience"
+    assert detect_jd_section("Kenntnisse") == "skills"
+
+
+def test_split_jd_sections():
+    jd_text = """
+    AI Engineer
+
+    RESPONSIBILITIES
+    Develop machine learning models.
+    Build REST APIs.
+
+    REQUIREMENTS
+    Python
+    PyTorch
+
+    EDUCATION
+    Bachelor's degree in Computer Science.
+
+    EXPERIENCE
+    2+ years of experience.
+
+    SKILLS
+    FastAPI
+    Docker
+    """
+
+    sections = split_jd_sections(jd_text)
+
+    assert "AI Engineer" in sections["general"]
+
+    assert "Develop machine learning models." in sections["responsibilities"]
+    assert "Build REST APIs." in sections["responsibilities"]
+
+    assert "Python" in sections["requirements"]
+    assert "PyTorch" in sections["requirements"]
+
+    assert "Bachelor's degree in Computer Science." in sections["education"]
+
+    assert "2+ years of experience." in sections["experience"]
+
+    assert "FastAPI" in sections["skills"]
+    assert "Docker" in sections["skills"]
