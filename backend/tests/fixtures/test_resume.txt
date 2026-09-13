@@ -1,0 +1,22 @@
+
+        John Doe
+        john@example.com
+        +49 123 456789
+        linkedin.com/in/johndoe
+
+        WORK EXPERIENCE
+        AI Engineer | Company XYZ
+        Built machine learning models.
+
+        EDUCATION
+        B.Sc. Artificial Intelligence
+
+        PROJECTS
+        ATS Resume Checker
+        Built an NLP-based resume analysis system.
+
+        SKILLS
+        Python
+        PyTorch
+        Machine Learning
+        
